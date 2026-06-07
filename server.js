@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 dotenv.config();
 
 // Connexion à la base de données
+console.log("🔄 Tentative de connexion à la base de données...");
 connectDB();
 
 const app = express();
