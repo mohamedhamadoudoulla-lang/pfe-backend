@@ -33,6 +33,43 @@ const estimationSchema = new mongoose.Schema(
       totalFurnishingCost: Number,
     },
 
+    // Caractéristiques du projet (pour marketplace)
+    caracteristiques: {
+      surface: { type: Number },
+      nbChambres: { type: Number },
+      nbSallesDeBain: { type: Number, default: 1 },
+      nbCuisines: { type: Number, default: 1 },
+      nbSalons: { type: Number, default: 1 },
+      scenario: { type: String, enum: ["eco", "standard", "premium"] },
+    },
+
+    // Matériaux de construction recommandés (gros œuvre)
+    materiauxConstruction: [
+      {
+        type: String,
+        nom: String,
+        quantite: Number,
+        unite: String,
+        prixUnitaire: Number,
+        sousTotal: Number,
+        disponible: Boolean,
+        message: String,
+        produitId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        vendeurId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
+    totalMateriaux: { type: Number, default: 0 },
+
+    // Panier marketplace (ameublement séparé)
+    panierMarketplace: [
+      {
+        produitId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        quantite: Number,
+        prixUnitaire: Number,
+        prixTotal: Number,
+      },
+    ],
+
     // Total
     totalCost: { type: Number },
 

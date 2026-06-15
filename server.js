@@ -7,7 +7,6 @@ const connectDB = require("./config/db");
 dotenv.config();
 
 // Connexion à la base de données
-console.log("🔄 Tentative de connexion à la base de données...");
 connectDB();
 
 const app = express();
@@ -15,6 +14,7 @@ const app = express();
 // Middlewares globaux
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/auth",        require("./routes/authRoutes"));
@@ -31,6 +31,8 @@ app.use("/api/furniture",     require("./routes/furnitureRoutes"));
 app.use("/api/admin",         require("./routes/adminRoutes"));
 app.use("/api/region-prices", require("./routes/regionPriceRoutes"));
 app.use("/api/pricing",        require("./routes/pricingRoutes"));
+app.use("/api/marketplace",    require("./routes/marketplaceRoutes"));
+app.use("/api",                require("./routes/materiauxRoutes"));
 app.get("/", (req, res) => {
   res.json({ message: "🏠 SmartBuild API opérationnelle" });
 });

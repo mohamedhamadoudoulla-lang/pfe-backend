@@ -44,6 +44,24 @@ router.post("/calculate", protect, async (req, res) => {
   }
 });
 
+// POST /api/estimations/init-marketplace — créer un devis avec caractéristiques pour la marketplace
+router.post("/init-marketplace", protect, async (req, res) => {
+  try {
+    const { caracteristiques } = req.body;
+    if (!caracteristiques || !caracteristiques.surface) {
+      return res.status(400).json({ message: "Caractéristiques du projet requises (surface minimum)" });
+    }
+    const estimation = await Estimation.create({
+      user: req.user._id,
+      caracteristiques,
+      status: "draft",
+    });
+    res.status(201).json(estimation);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
 router.get("/:id", protect, async (req, res) => {
   try {
     const estimation = await Estimation.findById(req.params.id).populate("user", "name email");

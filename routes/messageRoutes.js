@@ -1,4 +1,5 @@
 const express     = require("express");
+const mongoose    = require("mongoose");
 const router      = express.Router();
 const Message     = require("../models/Message");
 const { protect } = require("../middleware/authMiddleware");
@@ -34,6 +35,7 @@ router.get("/conversations", protect, async (req, res) => {
 
     res.json(conversations);
   } catch (error) {
+    console.error("[conversations]", error.message);
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
@@ -41,6 +43,9 @@ router.get("/conversations", protect, async (req, res) => {
 // GET ma conversation avec quelqu'un
 router.get("/:userId", protect, async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      return res.status(400).json({ message: "userId invalide" });
+    }
     const messages = await Message.find({
       $or: [
         { from: req.user._id, to: req.params.userId },
@@ -49,6 +54,7 @@ router.get("/:userId", protect, async (req, res) => {
     }).sort({ createdAt: 1 });
     res.json(messages);
   } catch (error) {
+    console.error("[messages GET]", error.message);
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
@@ -56,9 +62,17 @@ router.get("/:userId", protect, async (req, res) => {
 // POST envoyer un message
 router.post("/", protect, async (req, res) => {
   try {
-    const message = await Message.create({ ...req.body, from: req.user._id });
+    const { to, content } = req.body;
+    if (!to || !content) {
+      return res.status(400).json({ message: "Champs 'to' et 'content' requis" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(to)) {
+      return res.status(400).json({ message: "Destinataire invalide" });
+    }
+    const message = await Message.create({ from: req.user._id, to, content });
     res.status(201).json(message);
   } catch (error) {
+    console.error("[messages POST]", error.message);
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });

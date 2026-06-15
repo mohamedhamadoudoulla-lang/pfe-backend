@@ -133,29 +133,36 @@ router.post("/login", async (req, res) => {
 router.post("/google", async (req, res) => {
   try {
     const { accessToken, role } = req.body;
-    
-    // Vérifier le token Google via userinfo
-    const googleRes = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
+
+    if (!accessToken) {
+      return res.status(400).json({ message: "accessToken requis" });
+    }
+
+    const googleRes = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     const { sub: googleId, email, name, picture } = googleRes.data;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email non fourni par Google" });
+    }
 
     let user = await User.findOne({ email });
 
     if (user) {
-      // Mettre à jour googleId si non présent
       if (!user.googleId) {
         user.googleId = googleId;
-        user.isVerified = true; // S'ils se connectent avec Google, l'email est vérifié
+        user.isVerified = true;
         await user.save();
       }
     } else {
-      // Créer un nouvel utilisateur
       user = await User.create({
-        name,
+        name: name || email.split("@")[0],
         email,
         googleId,
         avatar: picture,
         role: role || "user",
-        isVerified: true, // Automatiquement vérifié via Google
+        isVerified: true,
       });
     }
 
@@ -171,8 +178,11 @@ router.post("/google", async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error("Google Auth Error:", error);
-    res.status(500).json({ message: "Erreur lors de la connexion Google", error: error.message });
+    console.error("Google Auth Error:", error.response?.data || error.message);
+    res.status(500).json({
+      message: "Erreur lors de la connexion Google",
+      error: error.response?.data || error.message,
+    });
   }
 });
 
@@ -181,8 +191,13 @@ router.post("/facebook", async (req, res) => {
   try {
     const { accessToken, role } = req.body;
 
-    // Vérifier le token Facebook
-    const fbRes = await axios.get(`https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`);
+    if (!accessToken) {
+      return res.status(400).json({ message: "accessToken requis" });
+    }
+
+    const fbRes = await axios.get("https://graph.facebook.com/me", {
+      params: { fields: "id,name,email,picture", access_token: accessToken },
+    });
     const { id: facebookId, name, email } = fbRes.data;
 
     if (!email) {
@@ -192,16 +207,14 @@ router.post("/facebook", async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) {
-      // Mettre à jour facebookId si non présent
       if (!user.facebookId) {
         user.facebookId = facebookId;
         user.isVerified = true;
         await user.save();
       }
     } else {
-      // Créer un nouvel utilisateur
       user = await User.create({
-        name,
+        name: name || email.split("@")[0],
         email,
         facebookId,
         role: role || "user",
@@ -221,8 +234,11 @@ router.post("/facebook", async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error("Facebook Auth Error:", error);
-    res.status(500).json({ message: "Erreur lors de la connexion Facebook", error: error.message });
+    console.error("Facebook Auth Error:", error.response?.data || error.message);
+    res.status(500).json({
+      message: "Erreur lors de la connexion Facebook",
+      error: error.response?.data || error.message,
+    });
   }
 });
 
