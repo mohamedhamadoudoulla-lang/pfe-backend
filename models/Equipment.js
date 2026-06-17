@@ -25,6 +25,10 @@ const equipmentSchema = new mongoose.Schema(
     description: { type: String },
     image:        { type: String },
     isActive:     { type: Boolean, default: true },
+    shopName:     { type: String, default: "" },
+    shopEmail:    { type: String, default: "" },
+    shopAddress:  { type: String, default: "" },
+    shopPhone:    { type: String, default: "" },
   },
   { timestamps: true }
 );

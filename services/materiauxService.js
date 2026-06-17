@@ -28,11 +28,20 @@ async function calculerMateriauxConstruction(surface, scenario) {
   for (const regle of regles) {
     const quantite = Math.round(surfaceNum * regle.ratioParM2 * 100) / 100;
 
-    const produit = await Product.findOne({
+    // D'abord chercher un produit correspondant au scenario exact
+    let produit = await Product.findOne({
       type: regle.type,
       categorie: "materiaux",
       scenario: scenario,
     }).sort({ prixUnitaire: 1 });
+
+    // Fallback: chercher un produit du meme type sans restriction de scenario
+    if (!produit) {
+      produit = await Product.findOne({
+        type: regle.type,
+        categorie: "materiaux",
+      }).sort({ prixUnitaire: 1 });
+    }
 
     if (!produit) {
       lignes.push({

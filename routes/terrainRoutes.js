@@ -3,6 +3,7 @@ const router = express.Router();
 const Terrain = require("../models/Terrain");
 const RegionPrice = require("../models/RegionPrice");
 const { protect } = require("../middleware/authMiddleware");
+const { uploadPlan } = require("../middleware/upload");
 
 router.get("/estimate", async (req, res) => {
   try {
@@ -82,10 +83,48 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", protect, async (req, res) => {
+router.post("/", protect, uploadPlan.single("plan"), async (req, res) => {
   try {
-    const terrain = await Terrain.create({ ...req.body, seller: req.user._id });
+    const body = typeof req.body.data === "string" ? JSON.parse(req.body.data) : req.body;
+    const payload = { ...body, seller: req.user._id };
+    if (req.file) payload.plan = `/uploads/plans/${req.file.filename}`;
+    if (body.lat && body.lng) {
+      payload.location = {
+        type: "Point",
+        coordinates: [parseFloat(body.lng), parseFloat(body.lat)],
+      };
+    }
+    const terrain = await Terrain.create(payload);
     res.status(201).json(terrain);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+// POST /in-zone — terrains dans un polygone GeoJSON
+router.post("/in-zone", async (req, res) => {
+  try {
+    const { polygon } = req.body;
+    if (!polygon || !polygon.coordinates || polygon.coordinates.length === 0) {
+      return res.status(400).json({ message: "Polygone invalide" });
+    }
+    const coords = polygon.coordinates[0];
+    const first = coords[0];
+    const last = coords[coords.length - 1];
+    if (first[0] !== last[0] || first[1] !== last[1]) {
+      return res.status(400).json({ message: "Le polygone doit être fermé" });
+    }
+    const terrains = await Terrain.find({
+      location: {
+        $geoWithin: {
+          $geometry: {
+            type: "Polygon",
+            coordinates: polygon.coordinates,
+          },
+        },
+      },
+    }).populate("seller", "name phone");
+    res.json(terrains);
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }

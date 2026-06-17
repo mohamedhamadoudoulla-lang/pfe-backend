@@ -68,6 +68,7 @@ router.get("/available", protect, async (req, res) => {
       : [];
     const projects = await Project.find({ status: "ouvert" })
       .populate("user", "name email phone")
+      .populate("estimation")
       .sort({ createdAt: -1 });
     const withStatus = projects.map((p) => ({
       ...p.toObject(),

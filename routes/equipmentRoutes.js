@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Equipment = require("../models/Equipment");
+const Estimation = require("../models/Estimation");
 const { protect } = require("../middleware/authMiddleware");
 
 router.get("/", async (req, res) => {
@@ -55,12 +56,28 @@ router.put("/:id", protect, async (req, res) => {
     if (equipment.seller.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Non autorise" });
     }
-    const allowed = ["name", "category", "qualityLevel", "unit", "price", "description", "image"];
+    const allowed = ["name", "category", "qualityLevel", "unit", "price", "description", "image", "shopName", "shopEmail", "shopAddress", "shopPhone"];
     allowed.forEach((field) => {
       if (req.body[field] !== undefined) equipment[field] = req.body[field];
     });
     await equipment.save();
     res.json(equipment);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+// GET /api/equipment/vendor/orders — commandes contenant les produits du vendeur
+router.get("/vendor/orders", protect, async (req, res) => {
+  try {
+    const vendorItems = await Equipment.find({ seller: req.user._id }).select("_id");
+    const vendorItemIds = vendorItems.map((e) => e._id);
+    if (vendorItemIds.length === 0) return res.json([]);
+    const estimations = await Estimation.find({ selectedEquipmentIds: { $in: vendorItemIds } })
+      .populate("user", "name email phone")
+      .populate("selectedEquipmentIds", "name category price shopName seller")
+      .sort({ createdAt: -1 });
+    res.json(estimations);
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }

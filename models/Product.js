@@ -12,6 +12,10 @@ const productSchema = new mongoose.Schema(
     stock: { type: Number, default: 0 },
     image: { type: String },
     description: { type: String },
+    shopName: { type: String, default: "" },
+    shopEmail: { type: String, default: "" },
+    shopAddress: { type: String, default: "" },
+    shopPhone: { type: String, default: "" },
   },
   { timestamps: true }
 );

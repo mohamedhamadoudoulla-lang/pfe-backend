@@ -47,13 +47,14 @@ router.post("/calculate", protect, async (req, res) => {
 // POST /api/estimations/init-marketplace — créer un devis avec caractéristiques pour la marketplace
 router.post("/init-marketplace", protect, async (req, res) => {
   try {
-    const { caracteristiques } = req.body;
+    const { caracteristiques, selectedEquipmentIds } = req.body;
     if (!caracteristiques || !caracteristiques.surface) {
       return res.status(400).json({ message: "Caractéristiques du projet requises (surface minimum)" });
     }
     const estimation = await Estimation.create({
       user: req.user._id,
       caracteristiques,
+      selectedEquipmentIds: selectedEquipmentIds || [],
       status: "draft",
     });
     res.status(201).json(estimation);

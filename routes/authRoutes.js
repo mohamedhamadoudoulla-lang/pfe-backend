@@ -25,7 +25,8 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Cet email est déjà utilisé" });
     }
 
-    const userRole = role || "user";
+    const ALLOWED_ROLES = ["user", "admin", "engineer", "terrain_seller", "equipment_seller"];
+    const userRole = ALLOWED_ROLES.includes(role) ? role : "user";
 
     const user = await User.create({
       name,

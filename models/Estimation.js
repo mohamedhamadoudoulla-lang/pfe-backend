@@ -33,6 +33,9 @@ const estimationSchema = new mongoose.Schema(
       totalFurnishingCost: Number,
     },
 
+    // Equipements selectionnes (par le client sur les pages finition)
+    selectedEquipmentIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Equipment" }],
+
     // Caractéristiques du projet (pour marketplace)
     caracteristiques: {
       surface: { type: Number },

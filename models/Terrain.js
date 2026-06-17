@@ -11,10 +11,23 @@ const terrainSchema = new mongoose.Schema(
     totalPrice: { type: Number },
     description: { type: String },
     images: [{ type: String }],
+    plan: { type: String },
     isAvailable: { type: Boolean, default: true },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+      },
+    },
   },
   { timestamps: true }
 );
+
+terrainSchema.index({ location: "2dsphere" });
 
 // ✅ Sans next — Mongoose 7+
 terrainSchema.pre("save", async function () {

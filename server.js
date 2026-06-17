@@ -1,3 +1,8 @@
+// tout en haut de server.js, avant tout le reste
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
+
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -31,6 +36,8 @@ app.use("/api/furniture",     require("./routes/furnitureRoutes"));
 app.use("/api/admin",         require("./routes/adminRoutes"));
 app.use("/api/region-prices", require("./routes/regionPriceRoutes"));
 app.use("/api/pricing",        require("./routes/pricingRoutes"));
+app.use("/api/products",      require("./routes/productRoutes"));
+app.use("/api/properties",    require("./routes/propertyRoutes"));
 app.use("/api/marketplace",    require("./routes/marketplaceRoutes"));
 app.use("/api",                require("./routes/materiauxRoutes"));
 app.get("/", (req, res) => {
