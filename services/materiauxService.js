@@ -61,6 +61,7 @@ async function calculerMateriauxConstruction(surface, scenario) {
 
     lignes.push({
       type: regle.type,
+      materialType: regle.type,
       nom: regle.nom || regle.type,
       quantite,
       unite: regle.unite,

@@ -49,14 +49,14 @@ const estimationSchema = new mongoose.Schema(
     // Matériaux de construction recommandés (gros œuvre)
     materiauxConstruction: [
       {
-        type: String,
-        nom: String,
-        quantite: Number,
-        unite: String,
-        prixUnitaire: Number,
-        sousTotal: Number,
-        disponible: Boolean,
-        message: String,
+        materialType: { type: String },
+        nom: { type: String },
+        quantite: { type: Number },
+        unite: { type: String },
+        prixUnitaire: { type: Number },
+        sousTotal: { type: Number },
+        disponible: { type: Boolean },
+        message: { type: String },
         produitId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
         vendeurId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       },
