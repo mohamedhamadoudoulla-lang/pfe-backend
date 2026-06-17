@@ -58,4 +58,24 @@ router.post("/materiaux-construction/:estimationId/valider", async (req, res) =>
   }
 });
 
+// GET /api/debug/rules — debug endpoint
+router.get("/debug/rules", async (req, res) => {
+  try {
+    const MaterialRule = require("../models/MaterialRule");
+    const Product = require("../models/Product");
+    const count = await MaterialRule.countDocuments();
+    const sample = await MaterialRule.find().limit(3);
+    const productCount = await Product.countDocuments({ categorie: "materiaux" });
+    res.json({
+      mongoHost: mongoose.connection.host,
+      mongoDb: mongoose.connection.name,
+      materialRuleCount: count,
+      productMateriauxCount: productCount,
+      sample,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
