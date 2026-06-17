@@ -1,83 +1,86 @@
 const MaterialRule = require("../models/MaterialRule");
 const Product = require("../models/Product");
 
+function normaliserScenario(scenario) {
+  if (!scenario) return "standard";
+  return scenario.toString().toLowerCase().trim();
+}
+
 async function calculerMateriauxConstruction(surface, scenario) {
   const surfaceNum = Number(surface);
   if (!surfaceNum || surfaceNum <= 0) {
-    throw new Error(`Surface invalide reçue : "${surface}"`);
-  }
-  if (!["eco", "standard", "premium"].includes(scenario)) {
-    throw new Error(`Scénario invalide reçu : "${scenario}"`);
+    throw new Error(`Surface invalide: "${surface}"`);
   }
 
-  const regles = await MaterialRule.find({ scenario });
+  const scenarioNormalise = normaliserScenario(scenario);
 
-  if (regles.length === 0) {
-    return {
-      surface: surfaceNum,
-      scenario,
-      lignes: [],
-      totalMateriaux: 0,
-      avertissement: `Aucune règle de calcul trouvée pour le scénario "${scenario}". Vérifie la collection MaterialRule.`,
-    };
+  if (!["eco", "standard", "premium"].includes(scenarioNormalise)) {
+    throw new Error(`Scénario invalide: "${scenario}"`);
+  }
+
+  let regles = await MaterialRule.find({ scenario: scenarioNormalise });
+
+  let avertissement = null;
+
+  if (!regles || regles.length === 0) {
+    console.warn(
+      `[materiaux] Aucune règle pour "${scenarioNormalise}", fallback sur "standard"`
+    );
+    regles = await MaterialRule.find({ scenario: "standard" });
+    avertissement = `Aucune règle pour le scénario "${scenarioNormalise}". Résultats basés sur le scénario "standard".`;
+  }
+
+  if (!regles || regles.length === 0) {
+    throw new Error(
+      "Base de données non initialisée. Lance: node scripts/seedMaterialRules.js"
+    );
   }
 
   const lignes = [];
   let totalMateriaux = 0;
 
   for (const regle of regles) {
-    const quantite = Math.round(surfaceNum * regle.ratioParM2 * 100) / 100;
+    const quantite = Math.ceil(surfaceNum * regle.ratioParM2);
 
-    // D'abord chercher un produit correspondant au scenario exact
     let produit = await Product.findOne({
       type: regle.type,
       categorie: "materiaux",
-      scenario: scenario,
     }).sort({ prixUnitaire: 1 });
 
-    // Fallback: chercher un produit du meme type sans restriction de scenario
     if (!produit) {
+      const nomRegex = new RegExp(regle.nom || regle.type, "i");
       produit = await Product.findOne({
-        type: regle.type,
+        nom: { $regex: nomRegex },
         categorie: "materiaux",
       }).sort({ prixUnitaire: 1 });
     }
 
-    if (!produit) {
-      lignes.push({
-        type: regle.type,
-        nom: regle.nom,
-        quantite,
-        unite: regle.unite,
-        prixUnitaire: null,
-        sousTotal: null,
-        disponible: false,
-        message: `Aucun produit "${regle.type}" disponible pour le scénario "${scenario}".`,
-      });
-      continue;
-    }
-
-    const sousTotal = Math.round(quantite * produit.prixUnitaire * 100) / 100;
+    const prixUnitaire = produit?.prixUnitaire ?? 0;
+    const sousTotal = Math.round(quantite * prixUnitaire * 100) / 100;
     totalMateriaux += sousTotal;
 
     lignes.push({
       type: regle.type,
-      nom: regle.nom,
+      nom: regle.nom || regle.type,
       quantite,
       unite: regle.unite,
-      prixUnitaire: produit.prixUnitaire,
+      prixUnitaire,
       sousTotal,
-      disponible: true,
-      produitId: produit._id,
-      vendeurId: produit.vendeurId || null,
+      disponible: !!produit,
+      produitId: produit?._id || null,
+      vendeurId: produit?.vendeurId || null,
+      message: produit
+        ? null
+        : `Aucun produit "${regle.type}" trouvé.`,
     });
   }
 
   return {
     surface: surfaceNum,
-    scenario,
+    scenario: scenarioNormalise,
     lignes,
     totalMateriaux: Math.round(totalMateriaux * 100) / 100,
+    avertissement,
   };
 }
 
