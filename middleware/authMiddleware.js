@@ -10,7 +10,8 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.userId).select("-password");
+      const userId = decoded.id || decoded.userId || decoded._id;
+      req.user = await User.findById(userId).select("-password");
       next();
     } catch (error) {
       return res.status(401).json({ message: "Token invalide" });

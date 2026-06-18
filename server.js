@@ -39,6 +39,7 @@ app.use("/api/pricing",        require("./routes/pricingRoutes"));
 app.use("/api/products",      require("./routes/productRoutes"));
 app.use("/api/properties",    require("./routes/propertyRoutes"));
 app.use("/api/marketplace",    require("./routes/marketplaceRoutes"));
+app.use("/api/panier",         require("./routes/panierRoutes"));
 app.use("/api",                require("./routes/materiauxRoutes"));
 app.get("/", (req, res) => {
   res.json({ message: "🏠 SmartBuild API opérationnelle" });

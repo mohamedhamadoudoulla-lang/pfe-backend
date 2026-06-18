@@ -5,6 +5,8 @@ const Engineer             = require("../models/Engineer");
 const Estimation           = require("../models/Estimation");
 const Furniture            = require("../models/Furniture");
 const Terrain              = require("../models/Terrain");
+const MaterialRule         = require("../models/MaterialRule");
+const Product              = require("../models/Product");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
 router.get("/stats", protect, adminOnly, async (req, res) => {
@@ -86,6 +88,90 @@ router.post("/create-admin", protect, adminOnly, async (req, res) => {
       message: "Admin créé",
       user: { _id: admin._id, name: admin.name, email: admin.email, role: admin.role },
     });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+// ── ESTIMATIONS ──────────────────────────────────
+router.get("/estimations", protect, adminOnly, async (req, res) => {
+  try {
+    const estimations = await Estimation.find()
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+    res.json(estimations);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+router.delete("/estimations/:id", protect, adminOnly, async (req, res) => {
+  try {
+    await Estimation.findByIdAndDelete(req.params.id);
+    res.json({ message: "Estimation supprimée" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+// ── MATERIAL RULES ───────────────────────────────
+router.get("/material-rules", protect, adminOnly, async (req, res) => {
+  try {
+    const rules = await MaterialRule.find().sort({ scenario: 1, type: 1 });
+    res.json(rules);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+router.post("/material-rules", protect, adminOnly, async (req, res) => {
+  try {
+    const { type, nom, scenario, ratioParM2, unite } = req.body;
+    if (!type || !nom || !scenario || ratioParM2 == null || !unite) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
+    }
+    const rule = await MaterialRule.create({ type, nom, scenario, ratioParM2, unite });
+    res.status(201).json(rule);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+router.put("/material-rules/:id", protect, adminOnly, async (req, res) => {
+  try {
+    const rule = await MaterialRule.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!rule) return res.status(404).json({ message: "Règle non trouvée" });
+    res.json(rule);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+router.delete("/material-rules/:id", protect, adminOnly, async (req, res) => {
+  try {
+    await MaterialRule.findByIdAndDelete(req.params.id);
+    res.json({ message: "Règle supprimée" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+// ── PRODUCTS (materiaux) ─────────────────────────
+router.get("/products", protect, adminOnly, async (req, res) => {
+  try {
+    const products = await Product.find({ categorie: "materiaux" })
+      .populate("vendeurId", "name email")
+      .sort({ type: 1 });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+router.delete("/products/:id", protect, adminOnly, async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Produit supprimé" });
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
