@@ -197,6 +197,12 @@ async function seedTerrains() {
     { title:"Terrain Djerba zone touristique",    region:"Médenine",  surface:700, pricePerM2:450,  description:"Zone Midoun Djerba, accès mer 3km", lat:33.8076, lng:10.9978, isAvailable:true, seller:seller._id },
     { title:"Terrain Tozeur palmeraie",           region:"Tozeur",    surface:400, pricePerM2:150,  description:"Bordure de palmeraie, vue oasis", lat:33.9197, lng:8.1337, isAvailable:true, seller:seller._id },
     { title:"Terrain Gafsa résidentiel",          region:"Gafsa",     surface:500, pricePerM2:180,  description:"Quartier El Ksar, commodités proches", lat:34.4311, lng:8.7757, isAvailable:true, seller:seller._id },
+
+    // 4 NOUVEAUX TERRAINS
+    { title:"Terrain Manouba centre",             region:"Tunis",     surface:250, pricePerM2:1100, description:"Plein centre de Manouba, transport en commun", lat:36.8108, lng:10.1284, isAvailable:true, seller:seller._id },
+    { title:"Terrain Jendouba campagne",          region:"Jendouba",  surface:1200,pricePerM2:150,  description:"Zone campagne verdoyante, vue montagne", lat:36.5019, lng:8.7803, isAvailable:true, seller:seller._id },
+    { title:"Terrain Sfax El Abadia",            region:"Sfax",      surface:450, pricePerM2:650,  description:"Quartier résidentiel calme, proche université", lat:34.7550, lng:10.7200, isAvailable:true, seller:seller._id },
+    { title:"Terrain Kasserine montagne",         region:"Kasserine", surface:800, pricePerM2:180,  description:"Zone montagneuse, air pur, grand terrain", lat:35.1676, lng:8.8360, isAvailable:true, seller:seller._id },
   ];
 
   await Terrain.insertMany(terrains);
