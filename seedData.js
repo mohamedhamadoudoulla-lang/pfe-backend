@@ -169,40 +169,40 @@ async function seedTerrains() {
 
   const terrains = [
     // TUNIS & GRAND TUNIS
-    { title:"Terrain constructible La Marsa",     region:"Tunis",     surface:300, pricePerM2:2500, description:"Terrain de 300m², zone résidentielle, toutes commodités", lat:36.8878, lng:10.3236, isAvailable:true, seller:seller._id },
-    { title:"Terrain résidentiel El Menzah",      region:"Tunis",     surface:450, pricePerM2:1800, description:"Zone calme, vis-à-vis, titre foncier", lat:36.8528, lng:10.1972, isAvailable:true, seller:seller._id },
-    { title:"Terrain 500m² Cité Ettahrir",        region:"Tunis",     surface:500, pricePerM2:1200, description:"Terrain plat, accès direct route principale", lat:36.8188, lng:10.1658, isAvailable:true, seller:seller._id },
-    { title:"Terrain Ariana Soghra",              region:"Ariana",    surface:400, pricePerM2:900,  description:"Zone villa, électricité et eau disponibles", lat:36.8625, lng:10.1956, isAvailable:true, seller:seller._id },
-    { title:"Terrain Ben Arous résidentiel",      region:"Ben Arous", surface:350, pricePerM2:750,  description:"Quartier calme, proche école et commerces", lat:36.7531, lng:10.2275, isAvailable:true, seller:seller._id },
+    { title:"Terrain constructible La Marsa",     region:"Tunis",     surface:300, pricePerM2:2500, description:"Terrain de 300m², zone résidentielle, toutes commodités", location:{ type:"Point", coordinates:[10.3236, 36.8878] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain résidentiel El Menzah",      region:"Tunis",     surface:450, pricePerM2:1800, description:"Zone calme, vis-à-vis, titre foncier", location:{ type:"Point", coordinates:[10.1972, 36.8528] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain 500m² Cité Ettahrir",        region:"Tunis",     surface:500, pricePerM2:1200, description:"Terrain plat, accès direct route principale", location:{ type:"Point", coordinates:[10.1658, 36.8188] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Ariana Soghra",              region:"Ariana",    surface:400, pricePerM2:900,  description:"Zone villa, électricité et eau disponibles", location:{ type:"Point", coordinates:[10.1956, 36.8625] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Ben Arous résidentiel",      region:"Ben Arous", surface:350, pricePerM2:750,  description:"Quartier calme, proche école et commerces", location:{ type:"Point", coordinates:[10.2275, 36.7531] }, isAvailable:true, seller:seller._id },
 
     // NORD
-    { title:"Terrain vue mer Bizerte",            region:"Bizerte",   surface:600, pricePerM2:650,  description:"Vue mer dégagée, zone résidentielle", lat:37.2744, lng:9.8739, isAvailable:true, seller:seller._id },
-    { title:"Terrain agricole Béja",              region:"Béja",      surface:2000,pricePerM2:120,  description:"Terrain agricole fertile, puits", lat:36.7256, lng:9.1817, isAvailable:true, seller:seller._id },
-    { title:"Terrain résidentiel Nabeul",         region:"Nabeul",    surface:500, pricePerM2:550,  description:"Zone villa, proche plage 2km", lat:36.4513, lng:10.7357, isAvailable:true, seller:seller._id },
+    { title:"Terrain vue mer Bizerte",            region:"Bizerte",   surface:600, pricePerM2:650,  description:"Vue mer dégagée, zone résidentielle", location:{ type:"Point", coordinates:[9.8739, 37.2744] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain agricole Béja",              region:"Béja",      surface:2000,pricePerM2:120,  description:"Terrain agricole fertile, puits", location:{ type:"Point", coordinates:[9.1817, 36.7256] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain résidentiel Nabeul",         region:"Nabeul",    surface:500, pricePerM2:550,  description:"Zone villa, proche plage 2km", location:{ type:"Point", coordinates:[10.7357, 36.4513] }, isAvailable:true, seller:seller._id },
 
     // CAP BON & SAHEL
-    { title:"Terrain Hammamet zone villa",        region:"Nabeul",    surface:800, pricePerM2:800,  description:"Zone touristique, permis de construire disponible", lat:36.3975, lng:10.6131, isAvailable:true, seller:seller._id },
-    { title:"Terrain Sousse Khzema",              region:"Sousse",    surface:450, pricePerM2:1200, description:"Quartier résidentiel, toutes facilités", lat:35.8245, lng:10.6346, isAvailable:true, seller:seller._id },
-    { title:"Terrain Monastir Khnis",             region:"Monastir",  surface:600, pricePerM2:1400, description:"Vue mer partielle, titre foncier propre", lat:35.7643, lng:10.8113, isAvailable:true, seller:seller._id },
-    { title:"Terrain Mahdia bord de mer",         region:"Mahdia",    surface:500, pricePerM2:600,  description:"100m de la plage, eau et électricité", lat:35.5047, lng:11.0622, isAvailable:true, seller:seller._id },
+    { title:"Terrain Hammamet zone villa",        region:"Nabeul",    surface:800, pricePerM2:800,  description:"Zone touristique, permis de construire disponible", location:{ type:"Point", coordinates:[10.6131, 36.3975] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Sousse Khzema",              region:"Sousse",    surface:450, pricePerM2:1200, description:"Quartier résidentiel, toutes facilités", location:{ type:"Point", coordinates:[10.6346, 35.8245] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Monastir Khnis",             region:"Monastir",  surface:600, pricePerM2:1400, description:"Vue mer partielle, titre foncier propre", location:{ type:"Point", coordinates:[10.8113, 35.7643] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Mahdia bord de mer",         region:"Mahdia",    surface:500, pricePerM2:600,  description:"100m de la plage, eau et électricité", location:{ type:"Point", coordinates:[11.0622, 35.5047] }, isAvailable:true, seller:seller._id },
 
     // SFAX & CENTRE
-    { title:"Terrain Sfax Gremda",                region:"Sfax",      surface:600, pricePerM2:500,  description:"Zone villa, accès asphalté", lat:34.7478, lng:10.7128, isAvailable:true, seller:seller._id },
-    { title:"Terrain Sfax centre urbain",         region:"Sfax",      surface:300, pricePerM2:900,  description:"Centre ville, idéal construction R+2", lat:34.7406, lng:10.7603, isAvailable:true, seller:seller._id },
-    { title:"Terrain Kairouan ville",             region:"Kairouan",  surface:400, pricePerM2:250,  description:"Zone résidentielle, eau et électricité", lat:35.6781, lng:10.0963, isAvailable:true, seller:seller._id },
+    { title:"Terrain Sfax Gremda",                region:"Sfax",      surface:600, pricePerM2:500,  description:"Zone villa, accès asphalté", location:{ type:"Point", coordinates:[10.7128, 34.7478] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Sfax centre urbain",         region:"Sfax",      surface:300, pricePerM2:900,  description:"Centre ville, idéal construction R+2", location:{ type:"Point", coordinates:[10.7603, 34.7406] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Kairouan ville",             region:"Kairouan",  surface:400, pricePerM2:250,  description:"Zone résidentielle, eau et électricité", location:{ type:"Point", coordinates:[10.0963, 35.6781] }, isAvailable:true, seller:seller._id },
 
     // SUD
-    { title:"Terrain Gabès zone industrielle",    region:"Gabès",     surface:1000,pricePerM2:200,  description:"Terrain plat, accès route nationale", lat:33.8881, lng:10.0975, isAvailable:true, seller:seller._id },
-    { title:"Terrain Médenine résidentiel",       region:"Médenine",  surface:500, pricePerM2:200,  description:"Quartier calme, permis de construire", lat:33.3549, lng:10.5055, isAvailable:true, seller:seller._id },
-    { title:"Terrain Djerba zone touristique",    region:"Médenine",  surface:700, pricePerM2:450,  description:"Zone Midoun Djerba, accès mer 3km", lat:33.8076, lng:10.9978, isAvailable:true, seller:seller._id },
-    { title:"Terrain Tozeur palmeraie",           region:"Tozeur",    surface:400, pricePerM2:150,  description:"Bordure de palmeraie, vue oasis", lat:33.9197, lng:8.1337, isAvailable:true, seller:seller._id },
-    { title:"Terrain Gafsa résidentiel",          region:"Gafsa",     surface:500, pricePerM2:180,  description:"Quartier El Ksar, commodités proches", lat:34.4311, lng:8.7757, isAvailable:true, seller:seller._id },
+    { title:"Terrain Gabès zone industrielle",    region:"Gabès",     surface:1000,pricePerM2:200,  description:"Terrain plat, accès route nationale", location:{ type:"Point", coordinates:[10.0975, 33.8881] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Médenine résidentiel",       region:"Médenine",  surface:500, pricePerM2:200,  description:"Quartier calme, permis de construire", location:{ type:"Point", coordinates:[10.5055, 33.3549] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Djerba zone touristique",    region:"Médenine",  surface:700, pricePerM2:450,  description:"Zone Midoun Djerba, accès mer 3km", location:{ type:"Point", coordinates:[10.9978, 33.8076] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Tozeur palmeraie",           region:"Tozeur",    surface:400, pricePerM2:150,  description:"Bordure de palmeraie, vue oasis", location:{ type:"Point", coordinates:[8.1337, 33.9197] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Gafsa résidentiel",          region:"Gafsa",     surface:500, pricePerM2:180,  description:"Quartier El Ksar, commodités proches", location:{ type:"Point", coordinates:[8.7757, 34.4311] }, isAvailable:true, seller:seller._id },
 
     // 4 NOUVEAUX TERRAINS
-    { title:"Terrain Manouba centre",             region:"Tunis",     surface:250, pricePerM2:1100, description:"Plein centre de Manouba, transport en commun", lat:36.8108, lng:10.1284, isAvailable:true, seller:seller._id },
-    { title:"Terrain Jendouba campagne",          region:"Jendouba",  surface:1200,pricePerM2:150,  description:"Zone campagne verdoyante, vue montagne", lat:36.5019, lng:8.7803, isAvailable:true, seller:seller._id },
-    { title:"Terrain Sfax El Abadia",            region:"Sfax",      surface:450, pricePerM2:650,  description:"Quartier résidentiel calme, proche université", lat:34.7550, lng:10.7200, isAvailable:true, seller:seller._id },
-    { title:"Terrain Kasserine montagne",         region:"Kasserine", surface:800, pricePerM2:180,  description:"Zone montagneuse, air pur, grand terrain", lat:35.1676, lng:8.8360, isAvailable:true, seller:seller._id },
+    { title:"Terrain Manouba centre",             region:"Tunis",     surface:250, pricePerM2:1100, description:"Plein centre de Manouba, transport en commun", location:{ type:"Point", coordinates:[10.1284, 36.8108] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Jendouba campagne",          region:"Jendouba",  surface:1200,pricePerM2:150,  description:"Zone campagne verdoyante, vue montagne", location:{ type:"Point", coordinates:[8.7803, 36.5019] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Sfax El Abadia",            region:"Sfax",      surface:450, pricePerM2:650,  description:"Quartier résidentiel calme, proche université", location:{ type:"Point", coordinates:[10.7200, 34.7550] }, isAvailable:true, seller:seller._id },
+    { title:"Terrain Kasserine montagne",         region:"Kasserine", surface:800, pricePerM2:180,  description:"Zone montagneuse, air pur, grand terrain", location:{ type:"Point", coordinates:[8.8360, 35.1676] }, isAvailable:true, seller:seller._id },
   ];
 
   await Terrain.insertMany(terrains);
